@@ -23,8 +23,6 @@ interface CustomDialogProps {
 function CustomDialog({ open, onClose, title, description, isEditing, onSave, onDelete, dataCy, textConfirm }: CustomDialogProps) {
   const { setEditedRadio, editedRadio } = useFavorites();
 
-  console.log('editedRadio', editedRadio);
-
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px] max-w-[80%] rounded-lg" data-cy={dataCy}>
