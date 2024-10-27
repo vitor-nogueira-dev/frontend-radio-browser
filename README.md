@@ -49,6 +49,7 @@ Uma aplicação frontend que permite aos usuários reviverem a nostalgia do rád
 
 Para instalar o projeto, siga os passos abaixo:
 
+
 1. **Clone o repositório:**
 ```bash
 git clone https://github.com/vitor-nogueira-dev/frontend-radio-browser.git
@@ -67,6 +68,8 @@ npm install
 <summary><strong>🔧 Rodando sem Docker</strong></summary>
 
 - É necessário ter concluído a instalação (passo 1 e 2).
+
+- A aplicação estará disponível em: [http://localhost:3000](http://localhost:3000)
 
 - **Para iniciar o projeto:**
 ```bash
@@ -99,23 +102,25 @@ npm test
 
 - É necessário ter concluído a instalação (passo 1 e 2).
 
+- A aplicação estará disponível em: [http://localhost:3000](http://localhost:3000)
+
 **Para usar o Docker:**
 - Para subir o contêiner:
- ```bash
- npm run docker:up
- ```
+```bash
+npm run docker:up
+```
 - Para parar o contêiner:
- ```bash
- npm run docker:down
- ```
+```bash
+npm run docker:down
+```
 - Para visualizar os logs:
- ```bash
- npm run docker:logs
- ```
+```bash
+npm run docker:logs
+```
 - Para reiniciar o contêiner:
- ```bash
- npm run docker:restart
- ```
+```bash
+npm run docker:restart
+```
 
 </details>
 
