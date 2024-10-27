@@ -28,7 +28,7 @@ export default function RadioBrowser() {
   }
 
   return (
-    <div className="flex h-screen w-[100vw] text-gray-900">
+    <div className="flex h-screen w-[100vw] text-gray-900 ">
       {!isMobile && (isSidebarOpen || !isMobile) && (
         <Sidebar />
       )}
