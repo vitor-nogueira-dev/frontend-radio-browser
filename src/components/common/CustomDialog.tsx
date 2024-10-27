@@ -16,22 +16,18 @@ interface CustomDialogProps {
   editedRadio?: IRadio | null;
   onSave?: () => void;
   onDelete?: () => void;
+  dataCy: string;
+  textConfirm?: string;
 }
 
-const CustomDialog: React.FC<CustomDialogProps> = ({
-  open,
-  onClose,
-  title,
-  description,
-  isEditing,
-  onSave,
-  onDelete,
-}) => {
+function CustomDialog({ open, onClose, title, description, isEditing, onSave, onDelete, dataCy, textConfirm }: CustomDialogProps) {
   const { setEditedRadio, editedRadio } = useFavorites();
-  
+
+  console.log('editedRadio', editedRadio);
+
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px] max-w-[80%] rounded-lg">
+      <DialogContent className="sm:max-w-[425px] max-w-[80%] rounded-lg" data-cy={dataCy}>
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           {description && <DialogDescription>{description}</DialogDescription>}
@@ -42,7 +38,7 @@ const CustomDialog: React.FC<CustomDialogProps> = ({
               <Label htmlFor="name" className="text-right">Nome</Label>
               <Input
                 id="name"
-                value={editedRadio.name?.trim()}
+                value={editedRadio.name?.replace('\t', '')}
                 onChange={(e) => setEditedRadio({ ...editedRadio, name: e.target.value })}
                 className="col-span-3"
               />
@@ -51,7 +47,7 @@ const CustomDialog: React.FC<CustomDialogProps> = ({
               <Label htmlFor="tags" className="text-right">Tags</Label>
               <Input
                 id="tags"
-                value={editedRadio.tags?.trim()}
+                value={editedRadio.tags}
                 onChange={(e) => setEditedRadio({ ...editedRadio, tags: e.target.value })}
                 className="w-full"
               />
@@ -60,7 +56,7 @@ const CustomDialog: React.FC<CustomDialogProps> = ({
               <Label htmlFor="country" className="text-right">País</Label>
               <Input
                 id="country"
-                value={editedRadio.country?.trim()}
+                value={editedRadio.country}
                 onChange={(e) => setEditedRadio({ ...editedRadio, country: e.target.value })}
                 className="w-full"
               />
@@ -69,7 +65,7 @@ const CustomDialog: React.FC<CustomDialogProps> = ({
               <Label htmlFor="language" className="text-right">Idioma</Label>
               <Input
                 id="language"
-                value={editedRadio.language?.trim()}
+                value={editedRadio.language}
                 onChange={(e) => setEditedRadio({ ...editedRadio, language: e.target.value })}
                 className="w-full"
               />
@@ -77,11 +73,11 @@ const CustomDialog: React.FC<CustomDialogProps> = ({
           </div>
         )}
         <DialogFooter className='grid grid-cols-2 gap-2'>
-          <Button variant="outline" onClick={onClose}>Cancelar</Button>
+          <Button variant="outline" onClick={onClose} data-cy={`${dataCy}-cancel`}>Cancelar</Button>
           {isEditing ? (
-            <Button onClick={onSave}>Salvar</Button>
+            <Button onClick={onSave} data-cy={`${dataCy}-save`}>Salvar</Button>
           ) : (
-            <Button variant="destructive" onClick={onDelete}>Deletar</Button>
+            <Button variant="destructive" onClick={onDelete} data-cy={`${dataCy}-delete`}>{textConfirm ? textConfirm : 'Deletar'}</Button>
           )}
         </DialogFooter>
       </DialogContent>
