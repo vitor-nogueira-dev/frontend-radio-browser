@@ -1,0 +1,32 @@
+[
+  {
+    "name": "#english",
+    "iso_639": null,
+    "stationcount": 3
+  },
+  {
+    "name": "#japan",
+    "iso_639": null,
+    "stationcount": 2
+  },
+  {
+    "name": "#spanish",
+    "iso_639": null,
+    "stationcount": 5
+  },
+  {
+    "name": "+7 languages",
+    "iso_639": null,
+    "stationcount": 2
+  },
+  {
+    "name": "1",
+    "iso_639": null,
+    "stationcount": 2
+  },
+  {
+    "name": "portuguese",
+    "iso_639": null,
+    "stationcount": 2
+  }
+]
