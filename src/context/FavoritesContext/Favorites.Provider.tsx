@@ -9,6 +9,8 @@ import IRadio from "@/interfaces/IRadio";
 
 import useLocalStorage from "@/hooks/useLocalStorage";
 
+const messageStationUnavailable = "Estação indisponível no momento. Por favor, tente outra.";
+
 export function FavoritesProvider({ children }: { children: React.ReactNode }) {
   const [currentlyPlaying, setCurrentlyPlaying] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<string | null>(null);
@@ -103,7 +105,7 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
         hlsRef.current.on(Hls.Events.MANIFEST_PARSED, () => {
           audioRef.current?.play().catch(error => {
             console.error("Error playing HLS stream:", error);
-            toast.error('Ocorreu um erro ao reproduzir esta rádio. Por favor, tente outra.');
+            toast.error(messageStationUnavailable);
             stopRadio();
           });
         });
@@ -111,7 +113,7 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
         audioRef.current.src = url;
         audioRef.current.play().catch(error => {
           console.error("Error playing native HLS stream:", error);
-          toast.error('Ocorreu um erro ao reproduzir esta rádio. Por favor, tente outra.');
+          toast.error(messageStationUnavailable);
           stopRadio();
         });
       } else {
@@ -151,12 +153,12 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
 
         audioRef.current.onerror = (e) => {
           console.error("Audio error:", e);
-          toast.error('Ocorreu um erro ao reproduzir esta rádio. Por favor, tente novamente por favor.');
+          toast.error(messageStationUnavailable);
           stopRadio();
         };
       } catch (error) {
         console.error("Error playing audio:", error);
-        toast.error('Ocorreu um erro ao reproduzir esta rádio. Por favor, tente novamente por favor.');
+        toast.error(messageStationUnavailable);
         stopRadio();
       } finally {
         setIsLoading(null);
