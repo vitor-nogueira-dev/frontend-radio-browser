@@ -59,7 +59,7 @@ function useRadioAPI({ name, country, language }: IUseRadioAPI) {
     () => fetchRadios(name, country, language),
     {
       onError: () => {
-        console.log('Error fetching radios');
+        console.error('Error fetching radios');
       },
     }
   );
