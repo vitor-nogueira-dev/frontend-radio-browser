@@ -14,7 +14,9 @@ function RadioLoading() {
         </div>
         <div className="mt-8 w-32 h-2 bg-gray-400 rounded-full animate-pulse"></div>
         <div className="mt-4 w-24 h-2 bg-gray-300 rounded-full animate-pulse"></div>
-        <div className="mt-8 text-lg font-semibold text-gray-700">Sintonizando...</div>
+        <div className="mt-8">
+          <h1 className='text-lg font-semibold text-gray-700'>Sintonizando...</h1>
+        </div>
       </div>
     </section>
   )
