@@ -22,16 +22,18 @@ function RadioList({ paginatedRadios, loading, favorites, toggleFavorite }: Radi
 
   if (paginatedRadios.length === 0) {
     return (
-      <RadioNotFound
-        title="Nenhuma rádio encontrada"
-        description="Tente novamente com outra pesquisa."
-        type='searchRadios'
-      />
+      <section data-cy="search-list-notfound">
+        <RadioNotFound
+          title="Nenhuma rádio encontrada"
+          description="Tente novamente com outra pesquisa."
+          type='searchRadios'
+        />
+      </section>
     );
   }
 
   return (
-    <section className='w-full'>
+    <section className='w-full' data-cy="search-list">
       {paginatedRadios.map((radio) => (
         <RadioCard
           key={radio.stationuuid}
