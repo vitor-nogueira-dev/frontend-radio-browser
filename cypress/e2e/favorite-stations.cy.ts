@@ -128,8 +128,7 @@ describe('Favorite Radios', () => {
     cy.get(selectors.playButton(dataStorage[4].stationuuid)).click();
     cy.get(selectors.loaderStation).should('exist');
 
-    cy.get(selectors.loaderStation).should('not.exist');
-    cy.wait(2000);
+    cy.get(selectors.loaderStation, { timeout: 8000 }).should('not.exist');
 
     cy.get(selectors.stopButton(dataStorage[4].stationuuid)).should('exist');
     cy.get(selectors.stopStation).should('exist');
