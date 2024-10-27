@@ -1,7 +1,7 @@
 interface IRadio {
   changeuuid: string;
   stationuuid: string;
-  serveruuid: string;
+  serveruuid: string | null
   name: string;
   url: string;
   url_resolved: string;

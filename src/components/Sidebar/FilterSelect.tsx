@@ -21,18 +21,19 @@ interface FilterSelectProps {
   placeholder: string;
   selectedValues: string[];
   onSelect: (values: string[]) => void;
+  dataCy?: string;
 }
 
-function FilterSelect({ options, placeholder, selectedValues, onSelect }: FilterSelectProps) {
+function FilterSelect({ options, placeholder, selectedValues, onSelect, dataCy }: FilterSelectProps) {
   const [open, setOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
   const filteredOptions = useMemo(() =>
-    options.filter(option => 
+    options.filter(option =>
       option.label.toLowerCase().includes(searchTerm.toLowerCase()) ||
       option.value.toLowerCase().includes(searchTerm.toLowerCase())
     )
-  , [options, searchTerm]);
+    , [options, searchTerm]);
 
   const toggleOption = useCallback((optionValue: string) => {
     const newValues = selectedValues.includes(optionValue)
@@ -52,6 +53,7 @@ function FilterSelect({ options, placeholder, selectedValues, onSelect }: Filter
           variant="outline"
           role="combobox"
           aria-expanded={open}
+          data-cy={dataCy}
           className="w-full justify-between"
         >
           {displayValue}
@@ -63,6 +65,7 @@ function FilterSelect({ options, placeholder, selectedValues, onSelect }: Filter
           <Input
             placeholder={placeholder?.replace('Selecione', 'Pesquise')}
             value={searchTerm}
+            data-cy="search-filter"
             onChange={(e) => setSearchTerm(e.target.value)}
             className="mb-2"
           />
@@ -85,7 +88,7 @@ function FilterSelect({ options, placeholder, selectedValues, onSelect }: Filter
               ))
             ) : (
               <p className="text-sm text-center py-4 text-muted-foreground">
-                No {placeholder.toLowerCase()} found.
+                Nenhuma correspondência encontrada. Tente novamente.
               </p>
             )}
           </ScrollArea>

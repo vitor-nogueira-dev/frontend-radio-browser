@@ -19,7 +19,7 @@ interface PaginationProps {
   className?: string
 }
 
-export default function Pagination({ currentPage, totalPages, onPageChange, totalItems, className = '' }: PaginationProps) {
+export default function Pagination({ currentPage, totalPages, onPageChange, totalItems, className }: PaginationProps) {
   return (
     <Card className='text-center bg-white py-2 border-t border-gray-200 rounded-lg shadow-md w-[75%] m-2 mx-auto'>
       <div className={`p-4 flex justify-between items-center ${className}`}>
@@ -29,6 +29,7 @@ export default function Pagination({ currentPage, totalPages, onPageChange, tota
             size="icon"
             onClick={() => onPageChange(Math.max(1, currentPage - 1))}
             disabled={currentPage === 1}
+            data-cy="prev-page"
             className='disabled:cursor-not-allowed'
           >
             <ChevronLeft className="h-4 w-4" />
@@ -44,6 +45,7 @@ export default function Pagination({ currentPage, totalPages, onPageChange, tota
                     e.preventDefault();
                     onPageChange(i + 1);
                   }}
+                  data-cy={`page-${i + 1}`}
                   isActive={currentPage === i + 1}
                 >
                   {i + 1}
@@ -59,6 +61,7 @@ export default function Pagination({ currentPage, totalPages, onPageChange, tota
             size="icon"
             onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
             disabled={currentPage === totalPages}
+            data-cy="next-page"
             className='disabled:cursor-not-allowed'
           >
             <ChevronRight className="h-4 w-4" />

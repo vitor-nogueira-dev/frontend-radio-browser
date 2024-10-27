@@ -40,6 +40,7 @@ function Filters({ selectedCountries, selectedLanguages, setSelectedCountries, s
           placeholder="Selecione os países"
           selectedValues={selectedCountries}
           onSelect={setSelectedCountries}
+          dataCy="country-filter"
         />
       )}
       {languages && languages.length > 0 && (
@@ -48,6 +49,7 @@ function Filters({ selectedCountries, selectedLanguages, setSelectedCountries, s
           placeholder="Selecione os idiomas"
           selectedValues={selectedLanguages}
           onSelect={setSelectedLanguages}
+          dataCy="language-filter"
         />
       )}
       {(selectedCountries.length > 0 || selectedLanguages.length > 0) && (
@@ -57,10 +59,11 @@ function Filters({ selectedCountries, selectedLanguages, setSelectedCountries, s
               key={countryCode}
               variant="secondary"
               size="sm"
+              data-cy={`selected-country-${countryCode}`}
               onClick={() => removeSelectedItem('country', countryCode)}
               className='text-wrap'
             >
-              {getCountryNameByCode(countryCode)} <X className="ml-2 h-4 w-4" />
+              {getCountryNameByCode(countryCode)} <X className="ml-2 h-4 w-4" data-cy="close-search-country" />
             </Button>
           ))}
           {selectedLanguages.map(language => (
@@ -71,7 +74,7 @@ function Filters({ selectedCountries, selectedLanguages, setSelectedCountries, s
               onClick={() => removeSelectedItem('language', language)}
               className='text-wrap'
             >
-              {language} <X className="ml-2 h-4 w-4" />
+              {language} <X className="ml-2 h-4 w-4" data-cy="close-search-language" />
             </Button>
           ))}
         </div>

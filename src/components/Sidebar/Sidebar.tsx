@@ -5,6 +5,7 @@ import Pagination from "@/components/common/Pagination";
 import SearchInput from "@/components/common/SearchInput";
 import Filters from "@/components/Sidebar/Filters";
 import RadioList from "@/components/RadioStationList/RadioList";
+import CustomDialog from "@/components/common/CustomDialog";
 
 import { useFavorites } from "@/context/FavoritesContext";
 import { useUI } from "@/context/UIContext";
@@ -20,6 +21,7 @@ function Sidebar() {
   const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
+  const [isStationPlaying, setIsStationPlaying] = useState(false);
 
   const debouncedSearch = useDebounce(search, 300);
   const debouncedCountries = useDebounce(selectedCountries, 300);
@@ -27,12 +29,12 @@ function Sidebar() {
 
   const { allRadios, loading } = useRadioAPI({
     name: debouncedSearch,
-    country: debouncedCountries.join(','),
+    country: debouncedCountries.join(","),
     language: debouncedLanguages.join(","),
   });
 
   const { isMobile, isSidebarOpen } = useUI();
-  const { favorites, addToFavorites, removeFromFavorites } = useFavorites();
+  const { favorites, addToFavorites, removeFromFavorites, currentlyPlaying } = useFavorites();
 
   useEffect(() => {
     setCurrentPage(1);
@@ -51,6 +53,10 @@ function Sidebar() {
   const toggleFavorite = (radio: IRadio) => {
     const isFavorite = favorites.some((f) => f.stationuuid === radio.stationuuid);
     if (isFavorite) {
+      if (currentlyPlaying === radio.stationuuid) {
+        setIsStationPlaying(true);
+        return;
+      }
       removeFromFavorites(radio.stationuuid);
     } else {
       addToFavorites(radio);
@@ -71,13 +77,22 @@ function Sidebar() {
     }
   };
 
+  const handleStopAndRemove = () => {
+    setIsStationPlaying(false);
+    removeFromFavorites(currentlyPlaying || '');
+  }
+
   return (
-    <section className={`${isSidebarOpen ? 'flex' : 'hidden'} bg-white border-r border-gray-200 flex-col h-full w-72 ${isMobile && 'w-full'}`}>
+    <section
+      className={`${isSidebarOpen ? 'flex' : 'hidden'} bg-white border-r border-gray-200 flex-col h-full w-72 ${isMobile && 'w-full'}`}
+      data-cy="sidebar"
+    >
       <div className="p-4 space-y-4 flex-shrink-0">
         <SearchInput
           search={search}
           handleInputChange={handleInputChange}
           clearSearch={clearSearch}
+          dataCy="search-input"
         />
         <Filters
           selectedCountries={selectedCountries}
@@ -104,6 +119,18 @@ function Sidebar() {
           onPageChange={setCurrentPage}
           totalItems={localPaginationInfo.totalItems}
           className="sticky bottom-0 left-0 right-0"
+        />
+      )}
+
+      {isStationPlaying && (
+        <CustomDialog
+          open={isStationPlaying}
+          onDelete={handleStopAndRemove}
+          title="Rádio em reprodução"
+          description="Sua rádio está tocando. Deseja parar a rádio e remover dos favoritos?"
+          onClose={() => setIsStationPlaying(false)}
+          dataCy="station-playing-dialog"
+          textConfirm="Parar e remover"
         />
       )}
     </section>
