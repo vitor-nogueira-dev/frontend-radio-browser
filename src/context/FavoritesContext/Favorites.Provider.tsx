@@ -27,22 +27,6 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  const addToFavorites = useCallback((radio: IRadio) => {
-    setFavorites((prev) => [...prev, radio]);
-    toast.success("Rádio adicionada aos favoritos!");
-  }, [setFavorites]);
-
-  const removeFromFavorites = useCallback((stationuuid: string) => {
-    setFavorites((prev) => prev.filter((radio) => radio.stationuuid !== stationuuid));
-    toast.success("Rádio removida dos favoritos!");
-  }, [setFavorites]);
-
-  const updateFavorite = useCallback((updatedRadio: IRadio) => {
-    setFavorites((prev) =>
-      prev.map((radio) => (radio.stationuuid === updatedRadio.stationuuid ? updatedRadio : radio))
-    );
-  }, [setFavorites]);
-
   const stopRadio = useCallback(() => {
     if (audioRef.current) {
       audioRef.current.pause();
@@ -53,6 +37,28 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
     }
     setCurrentlyPlaying(null);
   }, []);
+
+  const addToFavorites = useCallback((radio: IRadio) => {
+    setFavorites((prev) => [...prev, radio]);
+    toast.success("Rádio adicionada aos favoritos!");
+  }, [setFavorites]);
+
+  const removeFromFavorites = useCallback((stationuuid: string) => {
+    setFavorites((prev) => prev.filter((radio) => radio.stationuuid !== stationuuid));
+    if (currentlyPlaying === stationuuid) {
+      stopRadio();
+    }
+    setCurrentlyPlaying((prev) => prev === stationuuid ? null : prev);
+
+    toast.success("Rádio removida dos favoritos!");
+  }, [setFavorites, currentlyPlaying, stopRadio]);
+
+  const updateFavorite = useCallback((updatedRadio: IRadio) => {
+    setFavorites((prev) =>
+      prev.map((radio) => (radio.stationuuid === updatedRadio.stationuuid ? updatedRadio : radio))
+    );
+  }, [setFavorites]);
+
 
   const isHLSStream = useCallback((url: string) => {
     return url.includes('.m3u8');
@@ -87,29 +93,34 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
     setIsDeleting(null);
   }, [currentlyPlaying, stopRadio, removeFromFavorites]);
 
-  const playHLSStream = useCallback((url: string) => {
-    if (Hls.isSupported()) {
-      hlsRef.current = new Hls();
-      hlsRef.current.loadSource(url);
-      hlsRef.current.attachMedia(audioRef.current!);
-      hlsRef.current.on(Hls.Events.MANIFEST_PARSED, () => {
-        audioRef.current?.play().catch(error => {
-          console.error("Error playing HLS stream:", error);
+  const playHLSStream = useCallback(async (url: string) => {
+    if (typeof window !== "undefined") {
+      const { default: Hls } = await import('hls.js');
+      if (Hls.isSupported()) {
+        hlsRef.current = new Hls();
+        hlsRef.current.loadSource(url);
+        hlsRef.current.attachMedia(audioRef.current!);
+        hlsRef.current.on(Hls.Events.MANIFEST_PARSED, () => {
+          audioRef.current?.play().catch(error => {
+            console.error("Error playing HLS stream:", error);
+            toast.error('Ocorreu um erro ao reproduzir esta rádio. Por favor, tente outra.');
+            stopRadio();
+          });
+        });
+      } else if (audioRef.current?.canPlayType('application/vnd.apple.mpegurl')) {
+        audioRef.current.src = url;
+        audioRef.current.play().catch(error => {
+          console.error("Error playing native HLS stream:", error);
           toast.error('Ocorreu um erro ao reproduzir esta rádio. Por favor, tente outra.');
           stopRadio();
         });
-      });
-    } else if (audioRef.current?.canPlayType('application/vnd.apple.mpegurl')) {
-      audioRef.current.src = url;
-      audioRef.current.play().catch(error => {
-        console.error("Error playing HLS stream:", error);
-        toast.error('Ocorreu um erro ao reproduzir esta rádio. Por favor, tente outra.');
-        stopRadio();
-      });
-    } else {
-      throw new Error('This browser does not support HLS');
+      } else {
+        toast.error('Seu navegador não suporta HLS para reprodução de rádio. Tente um navegador diferente.');
+        console.error('This browser does not support HLS');
+      }
     }
   }, [stopRadio]);
+
 
   const playRadio = useCallback(async (id: string) => {
     if (currentlyPlaying === id) {
@@ -140,12 +151,12 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
 
         audioRef.current.onerror = (e) => {
           console.error("Audio error:", e);
-          toast.error('Ocorreu um erro ao reproduzir esta rádio. Por favor, tente outra.');
+          toast.error('Ocorreu um erro ao reproduzir esta rádio. Por favor, tente novamente por favor.');
           stopRadio();
         };
       } catch (error) {
         console.error("Error playing audio:", error);
-        toast.error('Ocorreu um erro ao reproduzir esta rádio. Por favor, tente outra.');
+        toast.error('Ocorreu um erro ao reproduzir esta rádio. Por favor, tente novamente por favor.');
         stopRadio();
       } finally {
         setIsLoading(null);
